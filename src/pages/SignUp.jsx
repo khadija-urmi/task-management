@@ -2,12 +2,41 @@ import { FaGoogle } from "react-icons/fa";
 import loginImg from "../assets/login.jpg";
 import { useContext } from "react";
 import { AuthContext } from "../provider/AuthProvider";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import useAxiosPublic from "../hook/useAxiosPublic";
 
 const SignUp = () => {
   const { googleSignUp } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const axiosPublic = useAxiosPublic();
 
   const handleGoogleLogIn = () => {
-    googleSignUp().then();
+    googleSignUp()
+      .then((result) => {
+        const userInfo = {
+          name: result.user?.displayName,
+          email: result.user?.email,
+        };
+        axiosPublic
+          .post("/user", userInfo)
+          .then((res) => {
+            if (res.data.insertedId) {
+              Swal.fire({
+                title: "Successfully Login",
+                icon: "success",
+                draggable: true,
+              });
+            }
+            navigate("/task");
+          })
+          .catch((err) => {
+            console.error("Error during axios request:", err);
+          });
+      })
+      .catch((error) => {
+        console.error("Error during Google login:", error);
+      });
   };
 
   return (
