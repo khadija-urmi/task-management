@@ -1,4 +1,5 @@
 import { useState } from "react";
+//import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState();
@@ -33,7 +34,7 @@ const Tasks = () => {
           <option value="In Progress">In Progress</option>
           <option value="Done">Done</option>
         </select>
-        <button className="p-3 bg-blue-500 text-white rounded">Add Task</button>
+        <button className="p-3.5 bg-blue-500 text-white rounded">Add</button>
       </div>
     </div>
   );
