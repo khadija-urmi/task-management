@@ -112,8 +112,7 @@ const Tasks = () => {
         Add Task
       </button>
 
-      {/* Main Tasks Grid */}
-      <div className="p-4 mt-16">
+      <div className="p-4 mt-6">
         <DndContext onDragEnd={handleDragEndTask}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {COLUMNS.map((column) => (
