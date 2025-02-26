@@ -3,6 +3,7 @@ import MainLayout from "../layout/MainLayout";
 import SignUp from "../pages/SignUp";
 import Tasks from "../pages/Tasks";
 import EditTask from "../pages/EditTask";
+import HandleTask from "../pages/HandleTask";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: "/task",
         element: <Tasks></Tasks>,
+      },
+      {
+        path: "/handle-task",
+        element: <HandleTask></HandleTask>,
       },
       {
         path: "/edit-task/:id",

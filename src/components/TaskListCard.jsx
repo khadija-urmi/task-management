@@ -1,8 +1,12 @@
 import { useDraggable } from "@dnd-kit/core";
 import { MdDelete, MdEditDocument } from "react-icons/md";
+import useAxiosPublic from "../hook/useAxiosPublic";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const TaskListCard = ({ task, refetch }) => {
   console.log("task", task);
+  const axiosPublic = useAxiosPublic();
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task._id,
   });
@@ -23,14 +27,14 @@ const TaskListCard = ({ task, refetch }) => {
     >
       <h3 className="font-medium text-neutral-100">{task.title}</h3>
       <p className="mt-2 text-sm text-neutral-400">{task.description}</p>
-      <div className="flex justify-end space-x-3 mt-2">
-        <button className="text-purple-400 hover:text-purple-600 focus:outline-none">
-          <MdEditDocument className="w-5 h-5" />
+      <Link to="/handle-task">
+        <button
+          type="button"
+          className="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mt-4"
+        >
+          Monitor
         </button>
-        <button className="text-red-500 hover:text-red-600 focus:outline-none">
-          <MdDelete className="w-5 h-5" />
-        </button>
-      </div>
+      </Link>
     </div>
   );
 };
