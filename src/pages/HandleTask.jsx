@@ -47,11 +47,12 @@ const HandleTask = () => {
   };
 
   const handleEditTask = (id) => {
+    console.log(id);
     navigate(`/edit-task/${id}`);
   };
 
   return (
-    <div className="mt-16">
+    <div className="mt-20">
       <h3 className="text-xl font-semibold mb-4">Your Tasks</h3>
       {isLoading ? (
         <p>Loading...</p>

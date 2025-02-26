@@ -8,23 +8,23 @@ import HandleTask from "../pages/HandleTask";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout></MainLayout>,
+    element: <MainLayout />,
     children: [
       {
         path: "/",
-        element: <SignUp></SignUp>,
+        element: <SignUp />,
       },
       {
-        path: "/task",
-        element: <Tasks></Tasks>,
+        path: "/tasks",
+        element: <Tasks />,
       },
       {
         path: "/handle-task",
-        element: <HandleTask></HandleTask>,
+        element: <HandleTask />,
       },
       {
         path: "/edit-task/:id",
-        element: <EditTask></EditTask>,
+        element: <EditTask />,
       },
     ],
   },
