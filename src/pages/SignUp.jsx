@@ -32,7 +32,7 @@ const SignUp = () => {
           .catch((err) => {
             console.error("Error during axios request:", err);
           });
-        navigate("/task");
+        navigate("/tasks");
       })
       .catch((error) => {
         console.error("Error during Google login:", error);

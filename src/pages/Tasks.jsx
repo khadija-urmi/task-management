@@ -106,15 +106,16 @@ const Tasks = () => {
     <div className="p-4 mt-16">
       <button
         onClick={openModal}
-        className="block text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="block text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-4"
         type="button"
       >
         Add Task
       </button>
 
+      {/* Main Tasks Grid */}
       <div className="p-4 mt-16">
         <DndContext onDragEnd={handleDragEndTask}>
-          <div className="flex gap-8 mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {COLUMNS.map((column) => (
               <Column
                 key={column.id}

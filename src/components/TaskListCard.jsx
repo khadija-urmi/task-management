@@ -1,12 +1,8 @@
 import { useDraggable } from "@dnd-kit/core";
-import { MdDelete, MdEditDocument } from "react-icons/md";
-import useAxiosPublic from "../hook/useAxiosPublic";
-import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
 const TaskListCard = ({ task, refetch }) => {
   console.log("task", task);
-  const axiosPublic = useAxiosPublic();
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task._id,
   });
