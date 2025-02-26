@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Column from "../components/Column";
 import { DndContext } from "@dnd-kit/core";
+import { AuthContext } from "../provider/AuthProvider";
+import useAxiosPublic from "../hook/useAxiosPublic";
+import Swal from "sweetalert2";
+import { useQuery } from "@tanstack/react-query";
 
 const Tasks = () => {
   const COLUMNS = [
@@ -11,11 +15,30 @@ const Tasks = () => {
 
   const [tasks, setTasks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { currentUser } = useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
 
   const [formData, setFormData] = useState({
     title: "",
     description: "",
   });
+
+  const {
+    data: taskList = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["taskList", currentUser],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/tasks");
+      return res.data;
+    },
+  });
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  console.log(taskList);
 
   const handleDragEndTask = async (event) => {
     const { active, over } = event;
@@ -25,13 +48,17 @@ const Tasks = () => {
     const taskId = active.id;
     const newStatus = over.id;
 
-    // Correct state update to move task to a new column
-    setTasks((prevTasks) => {
-      const updatedTasks = prevTasks.map((task) =>
-        task.id === taskId ? { ...task, status: newStatus } : task
-      );
-      return updatedTasks;
-    });
+    const updatedTasks = taskList.map((task) =>
+      task.id === taskId ? { ...task, status: newStatus } : task
+    );
+
+    setTasks(updatedTasks);
+    try {
+      await axiosPublic.patch(`/tasks/${taskId}`, { status: newStatus });
+      refetch();
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
   };
 
   const openModal = () => setIsModalOpen(true);
@@ -45,18 +72,34 @@ const Tasks = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const newTask = {
-      id: `${tasks.length + 1}`,
+      id: `${taskList.length + 1}`,
       title: formData.title,
       description: formData.description,
       status: "TODO",
+      email: currentUser.email,
     };
 
-    setTasks([...tasks, newTask]);
-    setFormData({ title: "", description: "" });
-    closeModal();
+    try {
+      const result = await axiosPublic.post("/tasks", newTask);
+      setTasks((prevTasks) => [...prevTasks, result.data]);
+      refetch();
+      Swal.fire({
+        icon: "success",
+        title: "Task Added!",
+        text: "Your task has been successfully added.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      setFormData({ title: "", description: "" });
+      closeModal();
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
   return (
@@ -69,16 +112,18 @@ const Tasks = () => {
         Add Task
       </button>
 
-      <div className="flex gap-8 mt-3">
-        {/* Wrap the drag-and-drop area */}
+      <div className="p-4 mt-16">
         <DndContext onDragEnd={handleDragEndTask}>
-          {COLUMNS.map((column) => (
-            <Column
-              key={column.id}
-              column={column}
-              tasks={tasks.filter((task) => task.status === column.id)}
-            />
-          ))}
+          <div className="flex gap-8 mt-3">
+            {COLUMNS.map((column) => (
+              <Column
+                key={column.id}
+                column={column}
+                tasks={taskList.filter((task) => task.status === column.id)}
+                refetch={refetch}
+              />
+            ))}
+          </div>
         </DndContext>
       </div>
 
