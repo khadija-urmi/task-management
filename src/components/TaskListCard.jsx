@@ -2,7 +2,6 @@ import { useDraggable } from "@dnd-kit/core";
 import { Link } from "react-router-dom";
 
 const TaskListCard = ({ task, refetch }) => {
-  console.log("task", task);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task._id,
   });

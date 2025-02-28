@@ -2,9 +2,9 @@ import { useContext, useState } from "react";
 import Column from "../components/Column";
 import { DndContext } from "@dnd-kit/core";
 import { AuthContext } from "../provider/AuthProvider";
-import useAxiosPublic from "../hook/useAxiosPublic";
 import Swal from "sweetalert2";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const Tasks = () => {
   const COLUMNS = [
@@ -16,7 +16,6 @@ const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { currentUser } = useContext(AuthContext);
-  const axiosPublic = useAxiosPublic();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -30,7 +29,9 @@ const Tasks = () => {
   } = useQuery({
     queryKey: ["taskList", currentUser],
     queryFn: async () => {
-      const res = await axiosPublic.get("/tasks");
+      const res = await axios.get(
+        `https://my-task-manager-app-server-qrei9nycc-khadija-urmis-projects.vercel.app/tasks/${currentUser.email}`
+      );
       return res.data;
     },
   });
@@ -54,7 +55,12 @@ const Tasks = () => {
 
     setTasks(updatedTasks);
     try {
-      await axiosPublic.patch(`/tasks/${taskId}`, { status: newStatus });
+      await axios.patch(
+        `https://my-task-manager-app-server-qrei9nycc-khadija-urmis-projects.vercel.app/tasks/${taskId}`,
+        {
+          status: newStatus,
+        }
+      );
       refetch();
     } catch (error) {
       console.error("Error updating task status:", error);
@@ -84,7 +90,10 @@ const Tasks = () => {
     };
 
     try {
-      const result = await axiosPublic.post("/tasks", newTask);
+      const result = await axios.post(
+        "https://my-task-manager-app-server-qrei9nycc-khadija-urmis-projects.vercel.app/tasks",
+        newTask
+      );
       setTasks((prevTasks) => [...prevTasks, result.data]);
       refetch();
       Swal.fire({

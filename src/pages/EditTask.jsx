@@ -1,16 +1,14 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useAxiosPublic from "../hook/useAxiosPublic";
 import Swal from "sweetalert2";
 
 const EditTask = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
-  const axiosPublic = useAxiosPublic();
 
   const { id } = useParams();
-  console.log(id);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,10 +18,13 @@ const EditTask = () => {
       return;
     }
     try {
-      await axiosPublic.put(`/tasks/${id}`, {
-        title,
-        description,
-      });
+      await axios.put(
+        `https://my-task-manager-app-server-qrei9nycc-khadija-urmis-projects.vercel.app/tasks/${id}`,
+        {
+          title,
+          description,
+        }
+      );
 
       Swal.fire({
         icon: "success",

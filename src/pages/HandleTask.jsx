@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { AuthContext } from "../provider/AuthProvider";
-import useAxiosPublic from "../hook/useAxiosPublic";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const HandleTask = () => {
   const { currentUser } = useContext(AuthContext);
-  const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
 
   const {
@@ -17,15 +16,19 @@ const HandleTask = () => {
   } = useQuery({
     queryKey: ["taskList", currentUser],
     queryFn: async () => {
-      const res = await axiosPublic.get("/tasks");
+      const res = await axios.get(
+        `https://my-task-manager-app-server-qrei9nycc-khadija-urmis-projects.vercel.app/tasks/${currentUser.email}`
+      );
       return res.data;
     },
   });
 
   const handleDeleteTask = async (id) => {
     try {
-      const response = await axiosPublic.delete(`/tasks/${id}`);
-      console.log(response);
+      const response = await axios.delete(
+        `https://my-task-manager-app-server-qrei9nycc-khadija-urmis-projects.vercel.app/tasks/${id}`
+      );
+      console.log("response of delete", response);
 
       Swal.fire({
         icon: "success",
